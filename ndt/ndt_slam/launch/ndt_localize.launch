@@ -1,0 +1,17 @@
+<!-- -->
+<launch>
+
+  <!-- send table.xml to param server -->
+  <arg name="range" default="1.0" />
+  <arg name="shift" default="0.3" />
+  <arg name="use_openmp" default="false" />
+
+  <!-- rosrun ndt_localizer ndt_mapping  -->
+  <node pkg="ndt_slam" type="queue_counter" name="queue_counter" output="screen" />
+  <node pkg="ndt_slam" type="ndt_localize" name="ndt_localize" output="screen">
+    <param name="range" value="$(arg range)" />
+    <param name="shift" value="$(arg shift)" />
+    <param name="use_openmp" value="$(arg use_openmp)" />  
+  </node>
+  
+</launch>

@@ -1,0 +1,39 @@
+#include <iostream>
+#include <sstream>
+#include <fstream>
+#include <string>
+
+#include <ros/ros.h>
+#include <std_msgs/Bool.h>
+#include <std_msgs/Float32.h>
+#include <sensor_msgs/PointCloud2.h>
+
+static int enqueue = 0;
+static int dequeue = 0;
+
+static void points_callback(const sensor_msgs::PointCloud2::ConstPtr& input)
+{
+	enqueue++;
+}
+
+static void ndt_map_callback(const sensor_msgs::PointCloud2::ConstPtr& input)
+{
+	dequeue++;
+
+	std::cout << "(Processed/Input): (" << dequeue << " / " << enqueue << ")" << std::endl;
+}
+
+int main(int argc, char **argv)
+{
+    ros::init(argc, argv, "queue_counter");
+
+    ros::NodeHandle nh;
+    ros::NodeHandle private_nh("~");
+
+    ros::Subscriber points_sub = nh.subscribe("rescue_robot/lidar/sum_points", 100000, points_callback);
+    ros::Subscriber ndt_map_sub = nh.subscribe("rescue_robot/lidar/ndt_map", 100000, ndt_map_callback);
+
+    ros::spin();
+
+    return 0;
+}
